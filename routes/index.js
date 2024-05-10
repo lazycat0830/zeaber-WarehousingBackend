@@ -1,11 +1,7 @@
 // index.js
 var express = require("express");
 var router = express.Router();
-const { Sequelize } = require("sequelize");
-const sequelize = new Sequelize("Warehousing", "blackcat9052", "Sfhjlk9052", {
-  host: "warehousing.database.windows.net",
-  dialect: "mssql",
-});
+const sequelize = require("../config/db");
 
 /* GET home page. localhost:3000/ */
 router.get("/", function (req, res, next) {
