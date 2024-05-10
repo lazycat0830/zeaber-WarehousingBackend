@@ -1,25 +1,11 @@
 // index.js
 var express = require("express");
-var router = express.Router();
-const sequelize = require("../config/db");
+var cookieParser = require("cookie-parser");
 
-/* GET home page. localhost:3000/ */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
+const router = express.Router();
+router.use(cookieParser());
 
-/* GET localhost:3000/test */
-router.get("/test", async function (req, res, next) {
-  const sql = `SELECT * FROM Company`;
-  try {
-    const account = await sequelize.query(sql, {
-      type: sequelize.QueryTypes.SELECT,
-    });
-    res.status(200).send(account);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+const usersRoutes = require("./users");
+router.use("/api/users", usersRoutes);
 
 module.exports = router;
