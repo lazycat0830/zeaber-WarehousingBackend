@@ -130,7 +130,7 @@ dist
 
 assemblyAI.py
 
-package-lock.json
+# package-lock.json
 
 config.py
 
