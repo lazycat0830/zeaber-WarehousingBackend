@@ -9,7 +9,10 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-const companyRoutes = require("./Company");
-router.use("/api/Company", companyRoutes);
+const AuthRoutes = require("./Auth");
+router.use("/api/Auth", AuthRoutes);
+
+const CompanyRoutes = require("./Company");
+router.use("/api/Company", CompanyRoutes);
 
 module.exports = router;

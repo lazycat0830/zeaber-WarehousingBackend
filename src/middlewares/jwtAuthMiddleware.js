@@ -1,7 +1,7 @@
 var _ = require("lodash");
 var Passport = require("passport");
 
-const jwtAuth = (type) => {
+function jwtAuth(type) {
   switch (_.toLower(type)) {
     case "local":
       return Passport.authenticate("local", { session: false });
@@ -13,6 +13,6 @@ const jwtAuth = (type) => {
         next();
       };
   }
-};
+}
 
 module.exports = { jwtAuth };

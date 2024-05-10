@@ -1,6 +1,5 @@
 var express = require("express");
-var jwt = require("../middlewares/jwtAuthMiddleware");
-const { jwtAuth } = jwt;
+var { jwtAuth } = require("../middlewares/jwtAuthMiddleware");
 const CompanyControllers = require("../http/controllers/CompanyController");
 const router = express.Router();
 
