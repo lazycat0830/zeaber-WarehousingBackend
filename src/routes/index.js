@@ -5,8 +5,9 @@ var cookieParser = require("cookie-parser");
 const router = express.Router();
 router.use(cookieParser());
 
-const usersRoutes = require("./users");
-router.use("/api/users", usersRoutes);
+router.get("/", function (req, res, next) {
+  res.render("index", { title: "Express" });
+});
 
 const companyRoutes = require("./Company");
 router.use("/api/Company", companyRoutes);
