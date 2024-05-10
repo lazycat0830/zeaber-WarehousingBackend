@@ -36,6 +36,38 @@ class AuthService {
       };
     }
   };
+  Register = async (account, password, name, email, role) => {
+    try {
+      const result = await AuthRepository.Register(
+        account,
+        password,
+        name,
+        email,
+        role
+      );
+      if (!result) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof result === "string") {
+        return {
+          status: 500,
+          message: result,
+        };
+      } else if (typeof result === "object") {
+        return {
+          status: 200,
+          data: "註冊成功!",
+        };
+      }
+    } catch (err) {
+      return {
+        status: 500,
+        message: "系統錯誤",
+      };
+    }
+  };
 }
 
 module.exports = new AuthService();

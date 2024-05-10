@@ -13,6 +13,25 @@ async function Login(req, res) {
   return formatResponseUtil.formatResponse(res, response);
 }
 
+async function Register(req, res) {
+  const bodyKey = ["account", "password", "name", "email", "role"];
+  if (!checkedValidationUtil.keyChecked(bodyKey, req.body))
+    return formatResponseUtil.keyErrorResponse(res, "欄位格式有誤，請檢查");
+
+  const { account, password, name, email, role } = req.body;
+
+  const response = await AuthService.Register(
+    account,
+    password,
+    name,
+    email,
+    role
+  );
+
+  return formatResponseUtil.formatResponse(res, response);
+}
+
 module.exports = {
   Login,
+  Register,
 };

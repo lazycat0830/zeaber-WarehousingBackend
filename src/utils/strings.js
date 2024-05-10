@@ -1,4 +1,4 @@
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcryptjs");
 var _ = require("lodash");
 
 function random(len, _mapStr) {
