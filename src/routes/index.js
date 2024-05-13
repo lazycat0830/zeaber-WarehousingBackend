@@ -15,4 +15,7 @@ router.use("/api/Auth", AuthRoutes);
 const CompanyRoutes = require("./Company");
 router.use("/api/Company", CompanyRoutes);
 
+const ProductTypeRoutes = require("./ProductType");
+router.use("/api/ProductType", ProductTypeRoutes);
+
 module.exports = router;
