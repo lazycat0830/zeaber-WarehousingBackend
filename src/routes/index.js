@@ -9,6 +9,9 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+const IsDeleteRoutes = require("./isDelete");
+router.use("/api/IsDelete", IsDeleteRoutes);
+
 const AuthRoutes = require("./Auth");
 router.use("/api/Auth", AuthRoutes);
 
