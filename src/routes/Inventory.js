@@ -11,4 +11,16 @@ const router = express.Router();
  */
 router.get("/getInventory", InventoryControllers.getInventory);
 
+/**
+ * @api {get} http://0.0.0.0/api/Inventory/editInfQuantity
+ * @apiName 修改庫存數量
+ * @apiGroup A01
+ *
+ * @apiParam {string} pro_id
+ * @apiParam {number} com_id
+ * @apiParam {number} inf_id
+ * @apiParam {number} pro_quantity
+ */
+router.put("/editInfQuantity", InventoryControllers.editInfQuantity);
+
 module.exports = router;
