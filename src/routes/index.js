@@ -24,4 +24,7 @@ router.use("/api/ProductType", ProductTypeRoutes);
 const ProductRoutes = require("./Product");
 router.use("/api/Product", ProductRoutes);
 
+const InventoryRoutes = require("./Inventory");
+router.use("/api/Inventory", InventoryRoutes);
+
 module.exports = router;
