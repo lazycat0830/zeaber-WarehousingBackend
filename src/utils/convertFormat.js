@@ -4,11 +4,15 @@ var moment = require("moment");
 class convertFormat {
   convertData = async (DataList) => {
     _.forEach(DataList, function (item) {
-      if (item.purchaseDate) {
-        item.purchaseDate = moment.utc(item.purchaseDate).format("YYYY-MM-DD");
+      if (item.pro_img) {
+        item.pro_img =
+          `data:application/png;base64,` +
+          Buffer.from(item.pro_img).toString("base64");
       }
-      if (item.returnDate) {
-        item.returnDate = moment.utc(item.returnDate).format("YYYY-MM-DD");
+      if (item.pro_insertDate) {
+        item.pro_insertDate = moment
+          .utc(item.pro_insertDate)
+          .format("YYYY-MM-DD HH:mm");
       }
     });
 

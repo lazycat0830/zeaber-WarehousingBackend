@@ -21,4 +21,7 @@ router.use("/api/Company", CompanyRoutes);
 const ProductTypeRoutes = require("./ProductType");
 router.use("/api/ProductType", ProductTypeRoutes);
 
+const ProductRoutes = require("./Product");
+router.use("/api/Product", ProductRoutes);
+
 module.exports = router;
