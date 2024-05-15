@@ -6,7 +6,7 @@ class IsDeleteService {
   delIsDelete = async () => {
     try {
       const result = {};
-      const tables = ["ProductInf", "Product", "Company"];
+      const tables = ["ProductInf", "Product", "Company", "Purchase"];
       for (const table of tables) {
         const data = await IsDeleteRepository.delIsDelete(table);
         result[table] = typeof data === "object" ? "清除成功" : data;

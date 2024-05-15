@@ -112,5 +112,68 @@ class InventoryService {
       };
     }
   };
+  finishPurchase = async (pur_id, pur_type, product) => {
+    try {
+      const result = await InventoryRepository.finishPurchase(pur_id, product);
+      const oldInf = await InventoryRepository.getOldProductInf(product);
+      await Promise.all(
+        product.map(async (proInf) => {
+          const oldpro = _.filter(oldInf, {
+            pro_color: proInf.pro_color,
+            pro_size: proInf.pro_size,
+          });
+          await InventoryRepository.putInfQuantity(proInf, oldpro[0], pur_type);
+        })
+      );
+      if (!result) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof result === "string") {
+        return {
+          status: 500,
+          message: result,
+        };
+      } else if (typeof result === "object") {
+        return {
+          status: 200,
+          data: "入庫完成",
+        };
+      }
+    } catch {
+      return {
+        status: 500,
+        message: "系統錯誤",
+      };
+    }
+  };
+  deletePurchase = async (pur_id) => {
+    try {
+      const result = await InventoryRepository.deletePurchase(pur_id);
+
+      if (!result) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof result === "string") {
+        return {
+          status: 500,
+          message: result,
+        };
+      } else if (typeof result === "object") {
+        return {
+          status: 200,
+          data: "刪除成功",
+        };
+      }
+    } catch {
+      return {
+        status: 500,
+        message: "系統錯誤",
+      };
+    }
+  };
 }
 module.exports = new InventoryService();

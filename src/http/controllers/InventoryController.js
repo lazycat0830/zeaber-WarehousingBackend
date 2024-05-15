@@ -60,4 +60,34 @@ async function addPurchase(req, res) {
   return formatResponseUtil.formatResponse(res, response);
 }
 
-module.exports = { getInventory, editInfQuantity, addPurchase };
+async function finishPurchase(req, res) {
+  const bodyKey = ["pur_id", "pur_type", "product"];
+  if (!checkedValidationUtil.keyChecked(bodyKey, req.body))
+    return formatResponseUtil.keyErrorResponse(res, "欄位格式有誤，請檢查");
+
+  const { pur_id, pur_type, product } = req.body;
+  const response = await InventoryService.finishPurchase(
+    pur_id,
+    pur_type,
+    product
+  );
+  return formatResponseUtil.formatResponse(res, response);
+}
+
+async function deletePurchase(req, res) {
+  const bodyKey = ["pur_id"];
+  if (!checkedValidationUtil.keyChecked(bodyKey, req.body))
+    return formatResponseUtil.keyErrorResponse(res, "欄位格式有誤，請檢查");
+
+  const { pur_id } = req.body;
+  const response = await InventoryService.deletePurchase(pur_id);
+  return formatResponseUtil.formatResponse(res, response);
+}
+
+module.exports = {
+  getInventory,
+  editInfQuantity,
+  addPurchase,
+  finishPurchase,
+  deletePurchase,
+};

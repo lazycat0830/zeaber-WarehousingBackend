@@ -34,7 +34,6 @@ class InventoryRepository {
     }
   };
   //#endregion
-
   //#region editInfQuantity
   editInfQuantity = async (com_id, pro_id, inf_id, pro_quantity) => {
     try {
@@ -56,7 +55,6 @@ class InventoryRepository {
     }
   };
   //#endregion
-
   //#region addPurchase
   addPurchase = async (
     pur_type,
@@ -107,6 +105,81 @@ class InventoryRepository {
         },
       });
       return result;
+    } catch (err) {
+      return err.message;
+    }
+  };
+  //#endregion
+  //#region finishPurchase
+  finishPurchase = async (pur_id, product) => {
+    try {
+      const sql = `update ${TABLE_NAME}.Purchase set 
+        finish_sts=:finish_sts,
+        product=:product,
+        finishDate=:finishDate
+        where pur_id=:pur_id `;
+      const result = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+        replacements: {
+          finish_sts: 1,
+          product: JSON.stringify(product),
+          finishDate: moment().format("YYYY-MM-DD HH:mm"),
+          pur_id: pur_id,
+        },
+      });
+      return result;
+    } catch (err) {
+      return err.message;
+    }
+  };
+  getOldProductInf = async (product) => {
+    try {
+      const item = _.map(
+        product,
+        (p) =>
+          `(pro_id='${p.pro_id}' and pro_color='${p.pro_color}' and pro_size='${p.pro_size}')`
+      ).join(" or ");
+      const sql = `select pro_id,inf_id,pro_quantity,pro_color,pro_size from ProductInf where isDelete=0 and (${item}) `;
+      const sqlResult = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+      return sqlResult;
+    } catch (err) {
+      return err.message;
+    }
+  };
+  putInfQuantity = async (proInf, oldProInf, pur_type) => {
+    try {
+      const sql = `update ${TABLE_NAME}.ProductInf set 
+      pro_quantity=:pro_quantity
+      where pro_id=:pro_id and pro_color=:pro_color and pro_size=:pro_size`;
+      const sqlResult = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+        replacements: {
+          pro_quantity: pur_type
+            ? oldProInf.pro_quantity + proInf.pro_quantity
+            : oldProInf.pro_quantity - proInf.pro_quantity,
+          pro_id: proInf.pro_id,
+          pro_color: proInf.pro_color,
+          pro_size: proInf.pro_size,
+        },
+      });
+      return sqlResult;
+    } catch (err) {
+      return err.message;
+    }
+  };
+  //#endregion
+  //#region deletePurchase
+  deletePurchase = async (pur_id) => {
+    try {
+      const sql = `update ${TABLE_NAME}.Purchase set 
+      isDelete=1
+      where pur_id='${pur_id}'`;
+      const sqlResult = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+      });
+      return sqlResult;
     } catch (err) {
       return err.message;
     }
