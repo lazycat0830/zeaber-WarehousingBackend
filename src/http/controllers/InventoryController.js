@@ -23,4 +23,41 @@ async function editInfQuantity(req, res) {
   return formatResponseUtil.formatResponse(res, response);
 }
 
-module.exports = { getInventory, editInfQuantity };
+async function addPurchase(req, res) {
+  const bodyKey = [
+    "pur_type",
+    "user_name",
+    "user_id",
+    "product",
+    "pur_allquantity",
+    "pro_allquantity",
+    "pro_allCost",
+    "insertDate",
+  ];
+  if (!checkedValidationUtil.keyChecked(bodyKey, req.body))
+    return formatResponseUtil.keyErrorResponse(res, "欄位格式有誤，請檢查");
+
+  const {
+    pur_type,
+    user_name,
+    user_id,
+    product,
+    pur_allquantity,
+    pro_allquantity,
+    pro_allCost,
+    insertDate,
+  } = req.body;
+  const response = await InventoryService.addPurchase(
+    pur_type,
+    user_name,
+    user_id,
+    JSON.stringify(product),
+    pur_allquantity,
+    pro_allquantity,
+    pro_allCost,
+    insertDate
+  );
+  return formatResponseUtil.formatResponse(res, response);
+}
+
+module.exports = { getInventory, editInfQuantity, addPurchase };

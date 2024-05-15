@@ -6,7 +6,7 @@ var generate = require("../../utils/generate");
 const TABLE_NAME = "dbo";
 
 class IsDeleteRepository {
-  //addProduct
+  //#region addProduct
   addProduct = async (
     com_id,
     pro_comName,
@@ -101,7 +101,9 @@ class IsDeleteRepository {
       return err.message;
     }
   };
-  //getAllProduct
+  //#endregion
+
+  //#region getAllProduct
   getAllProduct = async () => {
     try {
       const sql = `select * from Product where isDelete=0`;
@@ -113,7 +115,9 @@ class IsDeleteRepository {
       return err.message;
     }
   };
-  //deleteProduct
+  //#endregion
+
+  //#region deleteProduct
   deleteProduct = async (ListPro) => {
     try {
       const sqlPros = _.chain(ListPro)
@@ -152,7 +156,9 @@ class IsDeleteRepository {
       return err.message;
     }
   };
-  //editProduct
+  //#endregion
+
+  //#region editProduct
   editProduct = async (
     pro_id,
     com_id,
@@ -260,6 +266,7 @@ class IsDeleteRepository {
       return err.message;
     }
   };
+  //#endregion
 }
 
 module.exports = new IsDeleteRepository();

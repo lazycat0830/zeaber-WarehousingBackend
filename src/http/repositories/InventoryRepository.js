@@ -1,10 +1,12 @@
 var _ = require("lodash");
+var moment = require("moment");
 const sequelize = require("../../config/db");
+const generate = require("../../utils/generate");
 
 const TABLE_NAME = "dbo";
 
 class InventoryRepository {
-  // getInventory
+  //#region getAllProduct
   getAllProduct = async () => {
     try {
       const sql = `select com_id,pro_id,pro_comName,pro_homemadeName,type_id,pro_insertDate,pro_img from Product where isDelete=0`;
@@ -31,7 +33,9 @@ class InventoryRepository {
       return err.message;
     }
   };
-  // editInfQuantity
+  //#endregion
+
+  //#region editInfQuantity
   editInfQuantity = async (com_id, pro_id, inf_id, pro_quantity) => {
     try {
       const sql = `update ${TABLE_NAME}.ProductInf set 
@@ -51,6 +55,63 @@ class InventoryRepository {
       return err.message;
     }
   };
+  //#endregion
+
+  //#region addPurchase
+  addPurchase = async (
+    pur_type,
+    user_name,
+    user_id,
+    product,
+    pur_allquantity,
+    pro_allquantity,
+    pro_allCost,
+    insertDate
+  ) => {
+    try {
+      const sql = `insert into ${TABLE_NAME}.Purchase (
+        pur_type,
+        pur_name,
+        user_name,
+        user_id,
+        product,
+        pur_allquantity,
+        pro_allquantity,
+        pro_allCost,
+        insertDate
+      ) values (
+        :pur_type,
+        :pur_name,
+        :user_name,
+        :user_id,
+        :product,
+        :pur_allquantity,
+        :pro_allquantity,
+        :pro_allCost,
+        :insertDate
+      )`;
+      const result = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+        replacements: {
+          pur_type,
+          pur_name: `${moment
+            .utc(insertDate)
+            .format("YYYYMMDD")}-${generate.UUID()}`,
+          user_name,
+          user_id,
+          product,
+          pur_allquantity,
+          pro_allquantity,
+          pro_allCost,
+          insertDate,
+        },
+      });
+      return result;
+    } catch (err) {
+      return err.message;
+    }
+  };
+  //#endregion
 }
 
 module.exports = new InventoryRepository();

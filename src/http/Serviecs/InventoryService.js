@@ -68,5 +68,49 @@ class InventoryService {
       };
     }
   };
+  addPurchase = async (
+    pur_type,
+    user_name,
+    user_id,
+    product,
+    pur_allquantity,
+    pro_allquantity,
+    pro_allCost,
+    insertDate
+  ) => {
+    try {
+      const result = await InventoryRepository.addPurchase(
+        pur_type,
+        user_name,
+        user_id,
+        product,
+        pur_allquantity,
+        pro_allquantity,
+        pro_allCost,
+        insertDate
+      );
+      if (!result) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof result === "string") {
+        return {
+          status: 500,
+          message: result,
+        };
+      } else if (typeof result === "object") {
+        return {
+          status: 200,
+          data: `${pur_type ? "進貨單" : "退貨單"}新增成功`,
+        };
+      }
+    } catch {
+      return {
+        status: 500,
+        message: "系統錯誤",
+      };
+    }
+  };
 }
 module.exports = new InventoryService();

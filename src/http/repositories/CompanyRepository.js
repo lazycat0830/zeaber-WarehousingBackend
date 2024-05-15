@@ -93,26 +93,6 @@ class CompanyRepository {
     }
   };
 
-  deleteCompany = async (ListCom) => {
-    try {
-      const sqlPros = _.chain(ListCom)
-        .map((com_id) => {
-          return `com_id = '${com_id}'`;
-        })
-        .compact()
-        .join(" OR ")
-        .value();
-
-      const sql = `update ${TABLE_NAME}.Company set isDelete=1 where ${sqlPros}`;
-      const result = await sequelize.query(sql, {
-        type: sequelize.QueryTypes.UPDATE,
-      });
-      return result;
-    } catch (err) {
-      return err.message;
-    }
-  };
-
   csvAddCompany = async (ListCompany) => {
     try {
       const sqlComs = _.chain(ListCompany)
@@ -148,6 +128,27 @@ class CompanyRepository {
       return err.message;
     }
   };
+
+  deleteCompany = async (ListCom) => {
+    try {
+      const sqlPros = _.chain(ListCom)
+        .map((com_id) => {
+          return `com_id = '${com_id}'`;
+        })
+        .compact()
+        .join(" OR ")
+        .value();
+
+      const sql = `update ${TABLE_NAME}.Company set isDelete=1 where ${sqlPros}`;
+      const result = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+      });
+      return result;
+    } catch (err) {
+      return err.message;
+    }
+  };
+
   getPro_idList = async (com_id) => {
     try {
       const sql = `select pro_id from ${TABLE_NAME}.Product  where com_id = ${com_id}`;
