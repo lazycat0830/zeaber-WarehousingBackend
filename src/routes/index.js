@@ -27,4 +27,7 @@ router.use("/api/Product", ProductRoutes);
 const InventoryRoutes = require("./Inventory");
 router.use("/api/Inventory", InventoryRoutes);
 
+const OrderMeanRoutes = require("./OrderMean");
+router.use("/api/OrderMean", OrderMeanRoutes);
+
 module.exports = router;
