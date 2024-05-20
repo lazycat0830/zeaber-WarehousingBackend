@@ -10,7 +10,12 @@ var routes = require("./routes/index");
 var app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4000", "http://localhost:8002"],
+  origin: [
+    "http://localhost:4000",
+    "http://localhost:8002",
+    "https://warehousingadmin.zeabur.app",
+    "https://warehousingbackend.zeabur.app",
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
 };
