@@ -42,7 +42,7 @@ router.put("/editProductType", ProductTypeControllers.editProductType);
 
 /**
  * @api {delete} http://0.0.0.0/api/ProductType/delProductType
- * @apiName 修改商品類型
+ * @apiName 刪除商品類型
  * @apiGroup A01
  *
  * @apiParam {Array} ListTypeId  類型編號 NOT NULL [type_id,type_id,type_id]

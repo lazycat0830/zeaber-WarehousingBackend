@@ -19,41 +19,7 @@ const router = express.Router();
  *
  * @apiSuccessExample 成功回傳
  */
-router.post(
-  "/login",
-  // (req, res, next) => {
-  //   Passport.authenticate("local", { session: false }, (err, account, info) => {
-  //     if (err) {
-  //       res.send(err);
-  //       return;
-  //     }
-  //     if (!account) {
-  //       let response = "";
-  //       const statusCode = _.get(info, "status", 500);
-  //       if (statusCode === 401) {
-  //         response = {
-  //           status: statusCode,
-  //           message: "帳號或密碼錯誤",
-  //         };
-  //         return formatResponseUtil.formatResponse(res, response);
-  //       } else if (statusCode === 404) {
-  //         response = {
-  //           status: statusCode,
-  //           message: "查無此用戶",
-  //         };
-  //         return formatResponseUtil.formatResponse(res, response);
-  //       }
-  //       response = {
-  //         status: statusCode,
-  //         message: "系統錯誤",
-  //       };
-  //       return formatResponseUtil.formatResponse(res, response);
-  //     }
-  //     next();
-  //   })(req, res);
-  // },
-  AuthController.Login
-);
+router.post("/login", AuthController.Login);
 
 /**
  * @api {POST} http://0.0.0.0/api/Auth/register 註冊
