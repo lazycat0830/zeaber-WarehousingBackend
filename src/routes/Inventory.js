@@ -24,6 +24,14 @@ router.get("/getInventory", InventoryControllers.getInventory);
 router.put("/editInfQuantity", InventoryControllers.editInfQuantity);
 
 /**
+ * @api {get} http://0.0.0.0/api/Inventory/getAllPurchase
+ * @apiName 取得進退貨單
+ * @apiGroup A01
+ *
+ */
+router.get("/getAllPurchase", InventoryControllers.getAllPurchase);
+
+/**
  * @api {get} http://0.0.0.0/api/Inventory/addPurchase
  * @apiName 新增進退貨單
  * @apiGroup A01

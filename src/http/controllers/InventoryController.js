@@ -84,10 +84,16 @@ async function deletePurchase(req, res) {
   return formatResponseUtil.formatResponse(res, response);
 }
 
+async function getAllPurchase(req, res) {
+  const response = await InventoryService.getAllPurchase();
+  return formatResponseUtil.formatResponse(res, response);
+}
+
 module.exports = {
   getInventory,
   editInfQuantity,
   addPurchase,
   finishPurchase,
   deletePurchase,
+  getAllPurchase,
 };

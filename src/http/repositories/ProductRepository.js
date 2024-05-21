@@ -48,7 +48,7 @@ class IsDeleteRepository {
           type_id,
           pro_cost,
           pro_price,
-          pro_img,
+          pro_img: pro_img ? pro_img : null,
           pro_insertDate: moment().format("YYYY-MM-DD HH:mm"),
           pro_style: JSON.stringify(pro_style),
         },

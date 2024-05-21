@@ -41,7 +41,10 @@ class ProductService {
       ) {
         return {
           status: 500,
-          message: result,
+          message: {
+            product: ProductResult,
+            productInf: ProductInfResult,
+          },
         };
       } else if (
         typeof ProductResult === "object" &&

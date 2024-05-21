@@ -17,7 +17,7 @@ async function addProduct(req, res) {
     pro_price,
     pro_style,
   } = req.body;
-  const pro_img = req?.file.buffer;
+  const pro_img = req?.file?.buffer;
   const response = await ProductService.addProduct(
     com_id,
     pro_comName,

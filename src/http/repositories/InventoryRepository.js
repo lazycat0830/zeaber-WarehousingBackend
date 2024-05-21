@@ -185,6 +185,19 @@ class InventoryRepository {
     }
   };
   //#endregion
+  //#region getAllPurchase
+  getAllPurchase = async () => {
+    try {
+      const sql = `select pur_id,pur_name,insertDate,pur_type,finish_sts,pur_allquantity,pro_allquantity,pro_allCost,finishDate from Purchase where isDelete=0`;
+      const sqlResult = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+      return sqlResult;
+    } catch (err) {
+      return err.message;
+    }
+  };
+  //#endregion
 }
 
 module.exports = new InventoryRepository();
