@@ -24,9 +24,10 @@ class ProductService {
         pro_img,
         pro_style
       );
-      const addProductData = await ProductRepository.getaddProductId();
+      const addProductData = await ProductRepository.getaddTopProductId();
       const ProductInfResult = await ProductRepository.addProductInf(
         com_id,
+        pro_comName,
         addProductData[0].pro_id,
         pro_style
       );
@@ -133,7 +134,6 @@ class ProductService {
     try {
       const ProductResult = await ProductRepository.editProduct(
         pro_id,
-        com_id,
         pro_comName,
         pro_homemadeName,
         type_id,
@@ -148,7 +148,8 @@ class ProductService {
         com_id,
         pro_id,
         pro_style,
-        oldData
+        oldData,
+        pro_comName
       );
       if (!ProductResult || !ProductInfResult) {
         return {
@@ -176,6 +177,127 @@ class ProductService {
             prduct: "修改成功",
             prductInf: "修改成功",
           },
+        };
+      }
+    } catch {
+      return {
+        status: 500,
+        message: "系統錯誤",
+      };
+    }
+  };
+
+  csvAddProduct = async (csvFile, com_id) => {
+    try {
+      const data = [];
+      const ListProduct = await convertFormat.csvConvertArray(csvFile);
+      _.map(ListProduct, async (product, i) => {
+        product["pro_style"] = JSON.stringify({
+          color: product["color"].includes(" ")
+            ? product["color"].split(" ")
+            : product["color"].split(),
+          size: product["size"].includes(" ")
+            ? product["size"].split(" ")
+            : product["size"].split(),
+        });
+        if (product.pro_style === '{"color":[""],"size":[""]}') {
+          product.pro_style = "{}";
+        }
+        const ProductResult = await ProductRepository.addProduct(
+          com_id,
+          product.pro_comName,
+          product.pro_homemadeName,
+          product.type_id,
+          product.pro_cost,
+          product.pro_price,
+          null,
+          product.pro_style
+        );
+        const addProductData = await ProductRepository.getaddProductId(
+          com_id,
+          product.pro_comName
+        );
+        const ProductInfResult = await ProductRepository.addProductInf(
+          com_id,
+          product.pro_comName,
+          addProductData[0].pro_id,
+          JSON.parse(product.pro_style)
+        );
+        data.push({
+          name: product.pro_comName,
+          id: addProductData[0].pro_id,
+          result: ProductResult,
+          Infresult: ProductInfResult,
+        });
+      });
+      if (!data) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof data === "string") {
+        return {
+          status: 500,
+          message: data,
+        };
+      } else if (typeof data === "object") {
+        return {
+          status: 200,
+          data: data,
+        };
+      }
+    } catch (err) {
+      return {
+        status: 500,
+        message: err.message,
+      };
+    }
+  };
+
+  editProductImg = async (pro_id, pro_img) => {
+    try {
+      const Result = await ProductRepository.editProductImg(pro_id, pro_img);
+      if (!Result) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof Result === "string") {
+        return {
+          status: 500,
+          message: Result,
+        };
+      } else if (typeof Result === "object") {
+        return {
+          status: 200,
+          data: "修改成功",
+        };
+      }
+    } catch {
+      return {
+        status: 500,
+        message: "系統錯誤",
+      };
+    }
+  };
+
+  deleteProductImg = async (ListPro) => {
+    try {
+      const Result = await ProductRepository.deleteProductImg(ListPro);
+      if (!Result) {
+        return {
+          status: 404,
+          data: null,
+        };
+      } else if (typeof Result === "string") {
+        return {
+          status: 500,
+          message: Result,
+        };
+      } else if (typeof Result === "object") {
+        return {
+          status: 200,
+          data: "修改成功",
         };
       }
     } catch {

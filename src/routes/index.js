@@ -30,4 +30,7 @@ router.use("/api/Inventory", InventoryRoutes);
 const OrderMeanRoutes = require("./OrderMean");
 router.use("/api/OrderMean", OrderMeanRoutes);
 
+const SettingRoutes = require("./Setting");
+router.use("/api/Setting", SettingRoutes);
+
 module.exports = router;

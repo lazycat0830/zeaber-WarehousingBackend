@@ -70,4 +70,41 @@ router.put(
   ProductControllers.editProduct
 );
 
+/**
+ * @api {post} http://0.0.0.0/api/Product/csvAddProduct
+ * @apiName
+ * @apiGroup A01
+ *
+ * @apiParam {int} com_id 廠商編號 NOT NULL
+ * @apiParam {file} ProductCSV 商品csv檔 NOT NULL
+ */
+router.post(
+  "/csvAddProduct",
+  upload.single("ProductCSV"),
+  ProductControllers.csvAddProduct
+);
+
+/**
+ * @api {post} http://0.0.0.0/api/Product/editProductImg
+ * @apiName 修改商品
+ * @apiGroup A01
+ *
+ * @apiParam {string} pro_id
+ * @apiParam {file} pro_img
+ */
+router.put(
+  "/editProductImg",
+  upload.single("pro_img"),
+  ProductControllers.editProductImg
+);
+
+/**
+ * @api {post} http://0.0.0.0/api/Product/deleteProductImg
+ * @apiName 清除商品圖片
+ * @apiGroup A01
+ *
+ * @apiParam {List<pro_id>} ListPro 商品編號 [pro_id,pro_id,pro_id]
+ */
+router.put("/deleteProductImg", ProductControllers.deleteProductImg);
+
 module.exports = router;

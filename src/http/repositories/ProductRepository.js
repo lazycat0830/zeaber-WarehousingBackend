@@ -58,7 +58,7 @@ class IsDeleteRepository {
       return err.message;
     }
   };
-  getaddProductId = async () => {
+  getaddTopProductId = async () => {
     try {
       const sql = `select top 1 pro_id from ${TABLE_NAME}.Product order by pro_insertDate desc`;
       const sqlResult = await sequelize.query(sql, {
@@ -69,11 +69,11 @@ class IsDeleteRepository {
       return err.message;
     }
   };
-  addProductInf = async (com_id, pro_id, pro_style) => {
+  addProductInf = async (com_id, pro_comName, pro_id, pro_style) => {
     try {
       let sql = "";
       if (_.isEmpty(pro_style)) {
-        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_barcode) values (${com_id},'${pro_id}','${generate.UUID()}')`;
+        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_barcode,pro_comName) values (${com_id},'${pro_id}','${generate.UUID()}','${pro_comName}')`;
       } else {
         const sqlComs = _.chain(pro_style.color)
           .map((pro_color) => {
@@ -83,7 +83,8 @@ class IsDeleteRepository {
             '${pro_id}',
             '${pro_color}',
             '${pro_size}',
-            '${generate.UUID()}'
+            '${generate.UUID()}',
+            '${pro_comName}'
           )`;
             });
           })
@@ -91,7 +92,7 @@ class IsDeleteRepository {
           .compact()
           .join(",")
           .value();
-        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_color,pro_size,pro_barcode) values ${sqlComs}`;
+        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_color,pro_size,pro_barcode,pro_comName) values ${sqlComs}`;
       }
       const sqlResult = await sequelize.query(sql, {
         type: sequelize.QueryTypes.INSERT,
@@ -161,7 +162,6 @@ class IsDeleteRepository {
   //#region editProduct
   editProduct = async (
     pro_id,
-    com_id,
     pro_comName,
     pro_homemadeName,
     type_id,
@@ -172,26 +172,22 @@ class IsDeleteRepository {
   ) => {
     try {
       const sql = `update ${TABLE_NAME}.Product set 
-      com_id=:com_id,
       pro_comName=:pro_comName,
       pro_homemadeName=:pro_homemadeName,
       type_id=:type_id,
       pro_cost=:pro_cost,
       pro_price=:pro_price,
-      pro_img=:pro_img,
       pro_style=:pro_style
         where pro_id=:pro_id`;
       const result = await sequelize.query(sql, {
         type: sequelize.QueryTypes.UPDATE,
         replacements: {
           pro_id,
-          com_id,
           pro_comName,
           pro_homemadeName,
           type_id,
           pro_cost,
           pro_price,
-          pro_img,
           pro_style: JSON.stringify(pro_style),
         },
       });
@@ -222,18 +218,22 @@ class IsDeleteRepository {
       return err.message;
     }
   };
-  editProductInf = async (com_id, pro_id, pro_style, oldData) => {
+  editProductInf = async (com_id, pro_id, pro_style, oldData, pro_comName) => {
     try {
+      console.log(com_id, pro_id, pro_style, oldData);
       let sql = "";
       if (_.isEmpty(pro_style)) {
-        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_quantity,pro_barcode) values (${com_id},'${pro_id}',${
+        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_quantity,pro_barcode,pro_comName) values (${com_id},'${pro_id}',${
           oldData[0].pro_size ? 0 : oldData[0].pro_quantity
-        },'${oldData[0].pro_size ? generate.UUID() : oldData[0].pro_barcode}')`;
+        },'${
+          oldData[0].pro_size ? generate.UUID() : oldData[0].pro_barcode
+        }','${pro_comName}')`;
       } else {
         const sqlComs = _.chain(pro_style.color)
           .map((pro_color) => {
             return _.map(pro_style.size, (pro_size) => {
               const oldPro = _.map(oldData, (data) => {
+                console.log(data, pro_color, pro_size);
                 if (
                   data.pro_color === pro_color &&
                   data.pro_size === pro_size.toString()
@@ -246,8 +246,13 @@ class IsDeleteRepository {
                 '${pro_id}',
                 '${pro_color}',
                 '${pro_size}',
-                '${oldPro?.pro_quantity ? oldPro?.pro_quantity : 0}',
-                '${oldPro?.pro_barcode ? oldPro?.pro_barcode : generate.UUID()}'
+                '${oldPro[0]?.pro_quantity ? oldPro[0]?.pro_quantity : 0}',
+                '${
+                  oldPro[0]?.pro_barcode
+                    ? oldPro[0]?.pro_barcode
+                    : generate.UUID()
+                }',
+                '${pro_comName}'
               )`;
             });
           })
@@ -255,8 +260,7 @@ class IsDeleteRepository {
           .compact()
           .join(",")
           .value();
-        await console.log(sqlComs);
-        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_color,pro_size,pro_quantity,pro_barcode) values ${sqlComs}`;
+        sql = `insert into ${TABLE_NAME}.ProductInf (com_id,pro_id,pro_color,pro_size,pro_quantity,pro_barcode,pro_comName) values ${sqlComs}`;
       }
       const sqlResult = await sequelize.query(sql, {
         type: sequelize.QueryTypes.INSERT,
@@ -267,6 +271,57 @@ class IsDeleteRepository {
     }
   };
   //#endregion
+
+  getaddProductId = async (com_id, pro_comName) => {
+    try {
+      const sql = `select pro_id from ${TABLE_NAME}.Product where com_id=${com_id} and pro_comName='${pro_comName}'`;
+      const sqlResult = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+      return sqlResult;
+    } catch (err) {
+      return err.message;
+    }
+  };
+
+  editProductImg = async (pro_id, pro_img) => {
+    try {
+      const sql = `update ${TABLE_NAME}.Product set 
+      pro_img=:pro_img
+        where pro_id=:pro_id`;
+      const result = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+        replacements: {
+          pro_id,
+          pro_img,
+        },
+      });
+      return result;
+    } catch (err) {
+      return err.message;
+    }
+  };
+
+  deleteProductImg = async (ListPro) => {
+    try {
+      const sqlPros = _.chain(ListPro)
+        .map((pro_id) => {
+          return `pro_id = '${pro_id}'`;
+        })
+        .compact()
+        .join(" OR ")
+        .value();
+      const sql = `update ${TABLE_NAME}.Product set 
+      pro_img=${null}
+        where ${sqlPros}`;
+      const result = await sequelize.query(sql, {
+        type: sequelize.QueryTypes.UPDATE,
+      });
+      return result;
+    } catch (err) {
+      return err.message;
+    }
+  };
 }
 
 module.exports = new IsDeleteRepository();
